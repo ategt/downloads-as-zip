@@ -12,6 +12,7 @@ const proms = new Array();
 
 window.results = results;
 window.proms = proms;
+window.axios = axios;
 
 for ( let item of imgs ) {
   const line = item.src.replace("-200x250","");
@@ -25,6 +26,7 @@ for ( let item of imgs ) {
 
 const zip = new JSZip();
 axios.all(proms).then(function(not_sure){
+  conso
   for ( let result of results ) {
     const file_name = yeast();
     zip.file(`${file_name}.txt`, result.line);
