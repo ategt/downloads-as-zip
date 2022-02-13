@@ -15,6 +15,8 @@ window.proms = proms;
 window.axios = axios;
 window.progresses = new Array();
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 const saveArchive = function (archive) {
   archive.generateAsync({type:"blob"}).then(function(content) {
     console.log("Begining download.");
@@ -26,18 +28,17 @@ const saveArchive = function (archive) {
 const downloadProgressUpdate = function (progressItem) {
   return function (progressEvent) {
     Object.assign(progressItem, {loaded: progressEvent.loaded, total: progressEvent.total});
-    // const total = parseFloat(progressEvent.currentTarget.responseHeaders['Content-Length']);
-    // const current = progressEvent.currentTarget.response.length;
-
-    // let percentCompleted = Math.floor(current / total * 100);
-    // console.log('completed: ', percentCompleted)
   };
 };
 
-window.progressReport = function () {
+window.calculateProgress = function () {
   const allProgress = window.progresses.reduce((itm, acc) => ({loaded: itm.loaded + acc.loaded, total: itm.total + acc.total}), {loaded: 0, total: 0});
   
-  let percentCompleted = Math.floor(allProgress.loaded / allProgress.total * 100);
+  return Object.assign({}, allProgress, {progress: allProgress.loaded / allProgress.total});
+};
+
+window.progressReport = function () {
+  const precentCompleted = Math.floor( window.calculateProgress().progress * 100 );
   console.log('completed: ', percentCompleted);
 };
 
@@ -71,3 +72,26 @@ axios.all(proms).then(function(not_sure){
   console.log("Archive constructed.  Generating...");
   saveArchive(zip);
 });
+
+const update = function () {
+  return new Promise(function(resolve, reject) {
+    delay(2000).then(() => {
+      console.log("Waited 2s");
+      
+      const percentCompleted = window.calculateProgress();
+
+      if ( percentCompleted.progress < 1 && percentCompleted.total > 1 ) {
+        console.log('completed: ', Math.floor(percentCompleted.progress * 100));
+        update();
+      } else if ( percentCompleted.progress >= 1 && percentCompleted.total > 1 ) {
+        console.log("Full Progress", percentCompleted.progress, percentCompleted.total);
+      } else {
+        console.log("Waiting to load...", percentCompleted.total);
+      }
+
+      resolve();
+    });
+  });
+};
+
+update();
