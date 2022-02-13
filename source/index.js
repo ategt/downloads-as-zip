@@ -32,13 +32,12 @@ const downloadProgressUpdate = function (progressItem) {
 };
 
 window.calculateProgress = function () {
-  const allProgress = window.progresses.reduce((itm, acc) => ({loaded: itm.loaded + acc.loaded, total: itm.total + acc.total}), {loaded: 0, total: 0});
-  
-  return Object.assign({}, allProgress, {progress: allProgress.loaded / allProgress.total});
+  return window.progresses.reduce((itm, acc) => ({loaded: itm.loaded + acc.loaded, total: itm.total + acc.total}), {loaded: 0, total: 0});
 };
 
 window.progressReport = function () {
-  const precentCompleted = Math.floor( window.calculateProgress().progress * 100 );
+  const allProgress = window.calculateProgress();
+  const precentCompleted = Math.floor( allProgress.loaded / allProgress.total * 100 );
   console.log('completed: ', percentCompleted);
 };
 
@@ -78,15 +77,17 @@ const update = function () {
     delay(2000).then(() => {
       console.log("Waited 2s");
       
-      const percentCompleted = window.calculateProgress();
+      const progress = window.calculateProgress();
+      const percentCompleted = progress.loaded / progress.total;
 
-      if ( percentCompleted.progress < 1 && percentCompleted.total > 1 ) {
-        console.log('completed: ', Math.floor(percentCompleted.progress * 100));
+      if ( percentCompleted < 1 && progress.total > 1 ) {
+        console.log('completed: ', Math.floor(percentCompleted * 100));
         update();
-      } else if ( percentCompleted.progress >= 1 && percentCompleted.total > 1 ) {
-        console.log("Full Progress", percentCompleted.progress, percentCompleted.total);
+      } else if ( percentCompleted >= 1 && progress.total > 1 ) {
+        console.log("Full Progress", percentCompleted, progress.total);
       } else {
-        console.log("Waiting to load...", percentCompleted.total);
+        console.log("Waiting to load...", progress.total);
+        update();
       }
 
       resolve();
