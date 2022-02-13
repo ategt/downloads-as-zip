@@ -1,0 +1,19 @@
+{
+  "name": "borntocode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.25.0",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.7.1",
+    "jszip-utils": "^0.1.0",
+    "yeast": "^0.1.2"
+  }
+}
