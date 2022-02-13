@@ -13,7 +13,6 @@ const proms = new Array();
 window.results = results;
 window.proms = proms;
 window.axios = axios;
-window.progresses = new Array();
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
@@ -25,28 +24,12 @@ const saveArchive = function (archive) {
   });
 };
 
-const downloadProgressUpdate = function (progressItem) {
-  return function (progressEvent) {
-    Object.assign(progressItem, {loaded: progressEvent.loaded, total: progressEvent.total});
-  };
-};
-
-window.calculateProgress = function () {
-  return window.progresses.reduce((itm, acc) => ({loaded: itm.loaded + acc.loaded, total: itm.total + acc.total}), {loaded: 0, total: 0});
-};
-
-window.progressReport = function () {
-  const allProgress = window.calculateProgress();
-  const precentCompleted = Math.floor( allProgress.loaded / allProgress.total * 100 );
-  console.log('completed: ', percentCompleted);
-};
-
 for ( let item of imgs ) {
   const line = item.src.replace("-200x250","");
   const progressItem = new Object();
   window.progresses.push(progressItem);
 
-  proms.push(axios.get(line, {responseType: 'blob', onDownloadProgress: downloadProgressUpdate(progressItem)}).then(function (response) {
+  proms.push(axios.get(line, {responseType: 'blob'}).then(function (response) {
     results.push({line, response});
   })
   .catch(function (error) {
@@ -71,28 +54,3 @@ axios.all(proms).then(function(not_sure){
   console.log("Archive constructed.  Generating...");
   saveArchive(zip);
 });
-
-const update = function () {
-  return new Promise(function(resolve, reject) {
-    delay(2000).then(() => {
-      console.log("Waited 2s");
-      
-      const progress = window.calculateProgress();
-      const percentCompleted = progress.loaded / progress.total;
-
-      if ( percentCompleted < 1 && progress.total > 1 ) {
-        console.log('completed: ', Math.floor(percentCompleted * 100));
-        update();
-      } else if ( percentCompleted >= 1 && progress.total > 1 ) {
-        console.log("Full Progress", percentCompleted, progress.total);
-      } else {
-        console.log("Waiting to load...", progress.total);
-        update();
-      }
-
-      resolve();
-    });
-  });
-};
-
-update();
