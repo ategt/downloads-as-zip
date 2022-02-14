@@ -1,10 +1,9 @@
 module.exports = {
   mode: 'development',
-  devtool: "source-map",
+  devtool: "eval-source-map",
   entry: {
     index: './source/index',
-    demo: './source/demo',
-    "demo.min": './source/demo',
+    demo: './source/demo'
   },
   output: {
     filename: '[name].js',
