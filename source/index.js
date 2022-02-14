@@ -2,17 +2,19 @@ import axios from 'axios';
 import JSZip from 'jszip';
 import 'jszip-utils';
 import { saveAs } from 'file-saver';
+import { v4 as uuidv4 } from 'uuid';
 import yeast from 'yeast';
 
-const gal2 = document.getElementById("gallery-2");
-const imgs = gal2.getElementsByTagName("img");
+const buildArchive = function (responses, archive) {
+  const sources = responses.map(result => ({line:result.line, uuid:result.uuid}));
 
-const results = new Array();
-const proms = new Array();
+  zip.file(`source.txt`, location.href);
+  zip.file(`sources.json`, JSON.stringify(sources));
 
-window.results = results;
-window.proms = proms;
-window.axios = axios;
+  for ( let result of responses ) {
+    zip.file(result.uuid, result.response.data);
+  }
+};
 
 const saveArchive = function (archive) {
   archive.generateAsync({type:"blob"}).then(function(content) {
@@ -22,32 +24,33 @@ const saveArchive = function (archive) {
   });
 };
 
-for ( let item of imgs ) {
-  const line = item.src.replace("-200x250","");
-  const progressItem = new Object();
-  window.progresses.push(progressItem);
+const download = function (urls, promiseCollection, responses) {
+  for ( let line of urls ) {
+    promiseCollection.push(axios.get(line, {responseType: 'blob'}).then(function (response) {
+      responses.push({line, response, uuid: uuidv4()});
+    })
+    .catch(console.error);
+  }
+};
 
-  proms.push(axios.get(line, {responseType: 'blob'}).then(function (response) {
-    results.push({line, response});
-  })
-  .catch(function (error) {
-    console.log(error);
-  }));
-}
+const gallery = document.getElementById("gallery-2");
+const imgs = gallery.getElementsByTagName("img");
+
+const results = new Array();
+const proms = new Array();
+
+window.results = results;
+window.proms = proms;
+window.axios = axios;
+
+download(imgs.map(img => img.src.replace("-200x250","")), proms, results);
 
 const zip = new JSZip();
 window.zip = zip;
 
 axios.all(proms).then(function(not_sure){
   console.log("Data download finished, building archive.");
-
-  zip.file(`source.txt`, location.href);
-
-  for ( let result of results ) {
-    const file_name = yeast();
-    zip.file(`${file_name}.txt`, result.line);
-    zip.file(file_name, result.response.data);
-  }
+  buildArchive(results, zip);
 
   console.log("Archive constructed.  Generating...");
   saveArchive(zip);
