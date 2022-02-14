@@ -1,6 +1,6 @@
 import axios from 'axios';
-import 'jszip-utils';
 import JSZip from 'jszip';
+import 'jszip-utils';
 import { saveAs } from 'file-saver';
 import yeast from 'yeast';
 
@@ -13,8 +13,6 @@ const proms = new Array();
 window.results = results;
 window.proms = proms;
 window.axios = axios;
-
-const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const saveArchive = function (archive) {
   archive.generateAsync({type:"blob"}).then(function(content) {
