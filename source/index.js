@@ -33,20 +33,19 @@ const download = function (urls, promiseCollection, responses) {
   }
 };
 
-const gallery = document.getElementById("gallery-2");
-const imgs = gallery.getElementsByTagName("img");
+export const saveUrls = function (urls) {
+  const results = new Array();
+  const proms = new Array();
 
-const results = new Array();
-const proms = new Array();
+  download(urls, proms, results);
 
-download(imgs.map(img => img.src.replace("-200x250","")), proms, results);
+  const zip = new JSZip();
 
-const zip = new JSZip();
+  axios.all(proms).then(function(not_sure){
+    console.log("Data download finished, building archive.");
+    buildArchive(results, zip);
 
-axios.all(proms).then(function(not_sure){
-  console.log("Data download finished, building archive.");
-  buildArchive(results, zip);
-
-  console.log("Archive constructed.  Generating...");
-  saveArchive(zip);
-});
+    console.log("Archive constructed.  Generating...");
+    saveArchive(zip);
+  });
+};
