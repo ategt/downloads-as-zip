@@ -39,14 +39,9 @@ const imgs = gallery.getElementsByTagName("img");
 const results = new Array();
 const proms = new Array();
 
-window.results = results;
-window.proms = proms;
-window.axios = axios;
-
 download(imgs.map(img => img.src.replace("-200x250","")), proms, results);
 
 const zip = new JSZip();
-window.zip = zip;
 
 axios.all(proms).then(function(not_sure){
   console.log("Data download finished, building archive.");
