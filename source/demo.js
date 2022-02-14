@@ -1,4 +1,4 @@
-import { saveUrls } from 'index';
+import { saveUrls } from './index';
 
 const gallery = document.getElementById("gallery-2");
 const imgs = gallery.getElementsByTagName("img");

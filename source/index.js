@@ -26,10 +26,11 @@ const saveArchive = function (archive) {
 
 const download = function (urls, promiseCollection, responses) {
   for ( let line of urls ) {
-    promiseCollection.push(axios.get(line, {responseType: 'blob'}).then(function (response) {
-      responses.push({line, response, uuid: uuidv4()});
-    })
-    .catch(console.error);
+    promiseCollection.push(
+      axios.get(line, {responseType: 'blob'}).then(function (response) {
+        responses.push({line, response, uuid: uuidv4()});
+      }).catch(console.error)
+    );
   }
 };
 
