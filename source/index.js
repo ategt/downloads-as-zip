@@ -24,13 +24,12 @@ const buildArchive = function (responses, archive) {
   return archive;
 };
 
-
 /**
 *  Generate a downloadable from the archive object, then
 *  save with saveAs function from FileSaver.js.
 *  @param {JSZip} archive - The Archive to save.
 */
-const saveArchive = function (archive) {
+export const saveArchive = function (archive) {
   archive.generateAsync({type:"blob"}).then(function(content) {
     console.log("Begining download.");
     saveAs(content, yeast() + ".zip");
