@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node node_modules/webpack/bin/webpack.js --mode development --config build/webpack.config.dev.js",
     "minify": "uglifyjs ./dist/demo.js --compress --mangle --output ./dist/demo.min.js --source-map filename='./dist/demo.min.js.map'",
-    "build:minify": "webpack --mode development --config build/webpack.config.map.js && uglifyjs ./dist/demo.js --compress --mangle --output ./dist/demo.min.js --source-map filename='./dist/demo.min.js.map'"
+    "build:minify": "webpack --mode development --config build/webpack.config.map.js && uglifyjs ./dist/global.js --compress --mangle --output ./dist/global.min.js --source-map filename='./dist/global.min.js.map'"
   },
   "keywords": [],
   "author": "",

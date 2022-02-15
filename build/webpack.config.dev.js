@@ -3,7 +3,8 @@ module.exports = {
   devtool: "eval-source-map",
   entry: {
     index: './source/index',
-    demo: './source/demo'
+    demo: './source/demo',
+    global: './source/global'
   },
   output: {
     filename: '[name].js',

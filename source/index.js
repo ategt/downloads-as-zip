@@ -5,30 +5,46 @@ import { saveAs } from 'file-saver';
 import { v4 as uuidv4 } from 'uuid';
 import yeast from 'yeast';
 
+/**
+*  Construct archive from responses data list.
+*  @param {Object[]} responses - An array of axios
+          responses, with decorated data.
+*  @param {string} url - 
+*/
 const buildArchive = function (responses, archive) {
-  const sources = responses.map(result => ({line:result.line, uuid:result.uuid}));
+  const sources = responses.map(result => ({url:result.url, uuid:result.uuid}));
 
-  zip.file(`source.txt`, location.href);
-  zip.file(`sources.json`, JSON.stringify(sources));
+  archive.file(`source.txt`, location.href);
+  archive.file(`sources.json`, JSON.stringify(sources));
 
   for ( let result of responses ) {
-    zip.file(result.uuid, result.response.data);
+    archive.file(result.uuid, result.response.data);
   }
+
+  return archive;
 };
 
+
+/**
+*  Generate a downloadable from the archive object, then
+*  save with saveAs function from FileSaver.js.
+*  @param {JSZip} archive - The Archive to save.
+*/
 const saveArchive = function (archive) {
   archive.generateAsync({type:"blob"}).then(function(content) {
     console.log("Begining download.");
-    // see FileSaver.js
     saveAs(content, yeast() + ".zip");
   });
 };
 
+/**
+*  
+*/
 const download = function (urls, promiseCollection, responses) {
-  for ( let line of urls ) {
+  for ( let url of urls ) {
     promiseCollection.push(
-      axios.get(line, {responseType: 'blob'}).then(function (response) {
-        responses.push({line, response, uuid: uuidv4()});
+      axios.get(url, {responseType: 'blob'}).then(function (response) {
+        responses.push({url, response, uuid: uuidv4()});
       }).catch(console.error)
     );
   }
