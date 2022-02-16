@@ -10,11 +10,15 @@ describe('Index', () => {
   describe("Save URL's (saveUrls)", () => {
     let mockSaveAs;
 
-    beforeEach(function () {
+    before(function () {
       mockSaveAs = sinon.stub(FileSaver, "saveAs");
     });
 
     afterEach(function () {
+      mockSaveAs.reset();
+    });
+
+    after(function () {
       mockSaveAs.restore();
     });
 
