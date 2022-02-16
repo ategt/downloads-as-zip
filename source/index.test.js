@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { saveUrls, saveArchive } from './index';
 import FileSaver from 'file-saver';
+import shajs from 'sha.js';
 // import * as main from './index';
 
 // const saveUrls = main.saveUrls; 
@@ -15,7 +16,9 @@ describe('Index', () => {
       const mockSaveAs = sinon.stub(FileSaver, "saveAs");
 
     	mockSaveAs.callsFake((content, fileName) => {
-        expect(mockSaveAs.called).to.be.true;
+        //expect(mockSaveAs.called).to.be.true;
+        const hash = shajs('sha256').update(content).digest('hex');
+        console.log("Hash", hash);
         done();
       });
 
