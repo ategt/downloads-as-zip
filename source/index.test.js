@@ -33,30 +33,31 @@ describe('Index', () => {
       saveUrls(knownUrls);
     });
 
-    it('list of known urls - twice', function (done) {
+    it('list of known urls - twice', async function () {
       this.timeout(5000);
 
       const hashes = new Array();
+      let passesAchived;
 
       const passCounter = new Promise(function (resolve, reject) {
-        mockSaveAs.callsFake((content, fileName) => {
-          const hash = shajs('sha256').update(content).digest('hex');
-          hashes.push(hash);
-          console.log("Hash", hashes.length, hash);
+        passesAchived = resolve;
+      });
 
-          if ( hashes.length >= 2 ) {
-            resolve(hashes);
-          }
-        });
+      mockSaveAs.callsFake((content, fileName) => {
+        const hash = shajs('sha256').update(content).digest('hex');
+        hashes.push(hash);
+        console.log("Same Hash", hashes.length, hash);
+
+        if ( hashes.length >= 2 ) {
+          passesAchived(hashes);
+        }
       });
 
       saveUrls(knownUrls);
       saveUrls(knownUrls);
 
-      passCounter.then((hashes) => {
-        expect(hashes[0]).equal(hashes[1]);
-        done();
-      });
+      await passCounter;
+      expect(hashes[0]).equal(hashes[1]);
     });
 
     it('list of known urls - differences', async function () {
