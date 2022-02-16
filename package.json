@@ -31,6 +31,7 @@
     "jsdoc": "^3.6.10",
     "jsdoc-to-markdown": "^7.1.1",
     "mocha": "^9.2.0",
+    "moxios": "^0.4.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "sha.js": "^2.4.11",
     "sinon": "^12.0.1",
