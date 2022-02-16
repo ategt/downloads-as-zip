@@ -43,10 +43,13 @@ describe('Index', () => {
         passesAchived = resolve;
       });
 
-      mockSaveAs.callsFake((content, fileName) => {
-        const hash = shajs('sha256').update(content).digest('hex');
+      mockSaveAs.callsFake(async (content, fileName) => {
+        const arrayBuffer = await content.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+
+        const hash = shajs('sha256').update(uint8Array).digest('hex');
         hashes.push(hash);
-        console.log("Same Hash", hashes.length, hash);
+        console.log("Diff Hash", hashes.length, hash);
 
         if ( hashes.length >= 2 ) {
           passesAchived(hashes);
@@ -71,15 +74,10 @@ describe('Index', () => {
       });
 
       mockSaveAs.callsFake(async (content, fileName) => {
-        const readableStream = content.stream();
-        const sha256 = shajs('sha256');
+        const arrayBuffer = await content.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
 
-        for await (const chunk of readableStream) {
-          console.log(`Read ${chunk.length} bytes\n"${chunk.toString()}"\n`);
-          sha256.update(chunk);
-        }
-
-        const hash = sha256.digest('hex');
+        const hash = shajs('sha256').update(uint8Array).digest('hex');
         hashes.push(hash);
         console.log("Diff Hash", hashes.length, hash);
 
