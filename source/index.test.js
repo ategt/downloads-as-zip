@@ -70,8 +70,16 @@ describe('Index', () => {
         passesAchived = resolve;
       });
 
-      mockSaveAs.callsFake((content, fileName) => {
-        const hash = shajs('sha256').update(content).digest('hex');
+      mockSaveAs.callsFake(async (content, fileName) => {
+        const readableStream = content.stream();
+        const sha256 = shajs('sha256');
+
+        for await (const chunk of readableStream) {
+          console.log(`Read ${chunk.length} bytes\n"${chunk.toString()}"\n`);
+          sha256.update(chunk);
+        }
+
+        const hash = sha256.digest('hex');
         hashes.push(hash);
         console.log("Diff Hash", hashes.length, hash);
 
@@ -84,10 +92,8 @@ describe('Index', () => {
       saveUrls(knownUrls.slice(1, 4));
 
       await passCounter;
-      //.then((hashes) => {
+
       expect(hashes[0]).not.equal(hashes[1]);
-      //  done();
-      //});
     });
   });
 });
