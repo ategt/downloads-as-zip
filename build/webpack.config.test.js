@@ -17,9 +17,9 @@ module.exports = {
       {
         test: /\.css$/i,
         use: [
-          'css-unicode-loader',
           'style-loader',
-          'css-loader'
+          'css-loader',
+          'css-unicode-loader'
         ]
       }
     ]
