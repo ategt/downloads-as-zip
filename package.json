@@ -22,6 +22,7 @@
     "yeast": "^0.1.2"
   },
   "devDependencies": {
+    "blob-to-sha256": "^0.0.1",
     "chai": "^4.3.4",
     "css-loader": "^6.6.0",
     "css-unicode-loader": "^1.0.3",

@@ -37,7 +37,8 @@ export const saveArchive = function (archive) {
 };
 
 /**
-*  
+*  We want this function to return a list of promises,
+*    that will resolve to a list of responses.
 */
 const download = function (urls, promiseCollection, responses) {
   for ( let url of urls ) {
