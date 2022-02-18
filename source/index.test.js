@@ -1,8 +1,10 @@
 import { expect } from 'chai';
-import moxios from 'moxios';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import sinon from 'sinon';
 import { saveUrls, saveArchive } from './index';
 import FileSaver from 'file-saver';
+
 import gasketPng from '!!raw-loader!./test-assets/images/gasket.png';
 import gasketWebp from '!!raw-loader!./test-assets/images/gasket.webp';
 import duskJpg from '!!raw-loader!./test-assets/images/dusk-sm.jpg';
@@ -13,9 +15,12 @@ describe('Index', () => {
   describe("Save URL's (saveUrls)", () => {
     let mockSaveAs;
 
+    const mockAdapter = new MockAdapter(axios);
+
+    before(function () {});
+
     beforeEach(function () {
-      mockSaveAs = sinon.stub(FileSaver, "saveAs");
-      moxios.install();
+      k6ckSaveAs = sinon.stub(FileSaver, "saveAs");m,
     });
 
     afterEach(function () {
@@ -30,27 +35,20 @@ describe('Index', () => {
       // Best to leave it off.
       //
       // mockSaveAs.restore();
-      moxios.uninstall()
+      mockAdapter.restore();
     });
 
     const knownUrls = ['http://127.0.0.1:5000/gasket.webp',
                        'http://127.0.0.1:5000/gasket.png',
                        'http://127.0.0.1:5000/dusk-sm.jpg'];
 
-    moxios.stubRequest('http://127.0.0.1:5000/gasket.webp', {
-      status: 200,
-      response: gasketWebp
-    });
+    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').reply(200, gasketWebp);
+    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').reply(200, gasketPng);
+    // mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').reply(200, duskJpg);
 
-    moxios.stubRequest('http://127.0.0.1:5000/gasket.png', {
-      status: 200,
-      response: gasketPng
-    });
-
-    moxios.stubRequest('http://127.0.0.1:5000/dusk-sm.jpg', {
-      status: 200,
-      response: duskJpg
-    });
+    mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').passThrough();
+    mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').passThrough();
+    mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').passThrough();
 
     it('list of known urls', async () => {
       mockSaveAs.restore();
@@ -63,7 +61,7 @@ describe('Index', () => {
       mockSaveAs.callsFake(async (content, fileName) => {
         contentResolver(content);
       });
-
+w3eeeeeeeeee;;;;;;;;;;;;;;;;;;;;;;;llllllllllllllllllllllllllllllllllllll
       saveUrls(knownUrls);
       const content = await callWaiter;
       expect(content.size, content.size).equal(2739689);
