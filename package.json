@@ -7,7 +7,6 @@
     "build": "node node_modules/webpack/bin/webpack.js --mode development --config build/webpack.config.dev.js",
     "minify": "uglifyjs ./dist/demo.js --compress --mangle --output ./dist/demo.min.js --source-map filename='./dist/demo.min.js.map'",
     "test": "node node_modules/webpack/bin/webpack.js --config build/webpack.config.test.js",
-    "tape": "webpack --config build/webpack.config.tape.js && tape dist/**/*.tape.js",
     "build:minify": "webpack --mode development --config build/webpack.config.map.js && uglifyjs ./dist/global.js --compress --mangle --output ./dist/global.min.js --source-map filename='./dist/global.min.js.map'"
   },
   "keywords": [],
@@ -22,7 +21,6 @@
     "yeast": "^0.1.2"
   },
   "devDependencies": {
-    "blob-to-sha256": "^0.0.1",
     "chai": "^4.3.4",
     "css-loader": "^6.6.0",
     "css-unicode-loader": "^1.0.3",
@@ -34,10 +32,8 @@
     "mocha": "^9.2.0",
     "moxios": "^0.4.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
-    "sha.js": "^2.4.11",
     "sinon": "^12.0.1",
     "style-loader": "^3.3.1",
-    "tape": "^5.2.2",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2"
   },

@@ -2,8 +2,6 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { saveUrls, saveArchive } from './index';
 import FileSaver from 'file-saver';
-import shajs from 'sha.js';
-import blobToHash from 'blob-to-hash';
 
 mocha.setup('bdd');
 
@@ -20,7 +18,13 @@ describe('Index', () => {
     });
 
     after(function () {
-      //mockSaveAs.restore();
+      // Had problems with this being restored after the test timed out,
+      // but before the associated promises were resolved, so the actual
+      // function was called, instead of a stub, and chaos ensued.
+      //
+      // Best to leave it off.
+      //
+      // mockSaveAs.restore();
     });
 
     const knownUrls = ['http://127.0.0.1:5000/gasket-1.webp', 
@@ -30,9 +34,7 @@ describe('Index', () => {
 
     it('list of known urls', (done) => {
       mockSaveAs.callsFake(async (content, fileName) => {
-        const hash = shajs('sha256').update(content).digest('hex');
-        const otherHash = await blobToHash('sha256', content);
-        console.log("Hash", hash, otherHash, content.size);
+        console.log("File Size", content.size);
         done();
       });
 
