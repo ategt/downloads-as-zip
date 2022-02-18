@@ -1,7 +1,11 @@
 import { expect } from 'chai';
+import moxios from 'moxios';
 import sinon from 'sinon';
 import { saveUrls, saveArchive } from './index';
 import FileSaver from 'file-saver';
+import gasketPng from '!!raw-loader!./test-assets/images/gasket.png';
+import gasketWebp from '!!raw-loader!./test-assets/images/gasket.webp';
+import duskJpg from '!!raw-loader!./test-assets/images/dusk-sm.jpg';
 
 mocha.setup('bdd');
 
@@ -9,8 +13,9 @@ describe('Index', () => {
   describe("Save URL's (saveUrls)", () => {
     let mockSaveAs;
 
-    before(function () {
+    beforeEach(function () {
       mockSaveAs = sinon.stub(FileSaver, "saveAs");
+      moxios.install();
     });
 
     afterEach(function () {
@@ -25,20 +30,43 @@ describe('Index', () => {
       // Best to leave it off.
       //
       // mockSaveAs.restore();
+      moxios.uninstall()
     });
 
-    const knownUrls = ['http://127.0.0.1:5000/gasket-1.webp', 
-                       'http://127.0.0.1:5000/gasket-2.webp',
-                       'http://127.0.0.1:5000/gasket-3.webp',
-                       'http://127.0.0.1:5000/gasket-4.webp'];
+    const knownUrls = ['http://127.0.0.1:5000/gasket.webp',
+                       'http://127.0.0.1:5000/gasket.png',
+                       'http://127.0.0.1:5000/dusk-sm.jpg'];
 
-    it('list of known urls', (done) => {
+    moxios.stubRequest('http://127.0.0.1:5000/gasket.webp', {
+      status: 200,
+      response: gasketWebp
+    });
+
+    moxios.stubRequest('http://127.0.0.1:5000/gasket.png', {
+      status: 200,
+      response: gasketPng
+    });
+
+    moxios.stubRequest('http://127.0.0.1:5000/dusk-sm.jpg', {
+      status: 200,
+      response: duskJpg
+    });
+
+    it('list of known urls', async () => {
+      mockSaveAs.restore();
+      let contentResolver;
+
+      const callWaiter = new Promise((resolve) => {
+        contentResolver = resolve;
+      });
+
       mockSaveAs.callsFake(async (content, fileName) => {
-        expect(content.size, content.size).equal(2739689);
-        done();
+        contentResolver(content);
       });
 
       saveUrls(knownUrls);
+      const content = await callWaiter;
+      expect(content.size, content.size).equal(2739689);
     });
 
     it('list of known urls - twice', async function () {
