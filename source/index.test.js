@@ -20,7 +20,7 @@ describe('Index', () => {
     before(function () {});
 
     beforeEach(function () {
-      k6ckSaveAs = sinon.stub(FileSaver, "saveAs");m,
+      mockSaveAs = sinon.stub(FileSaver, "saveAs");
     });
 
     afterEach(function () {
@@ -61,7 +61,7 @@ describe('Index', () => {
       mockSaveAs.callsFake(async (content, fileName) => {
         contentResolver(content);
       });
-w3eeeeeeeeee;;;;;;;;;;;;;;;;;;;;;;;llllllllllllllllllllllllllllllllllllll
+
       saveUrls(knownUrls);
       const content = await callWaiter;
       expect(content.size, content.size).equal(2739689);
