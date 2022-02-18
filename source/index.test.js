@@ -34,7 +34,7 @@ describe('Index', () => {
 
     it('list of known urls', (done) => {
       mockSaveAs.callsFake(async (content, fileName) => {
-        console.log("File Size", content.size);
+        expect(content.size, content.size).equal(2739689);
         done();
       });
 
