@@ -9,7 +9,7 @@
 *  @returns {Blob} - Created from arguments
 */
 export const base64toBlob = (base64Data, contentType) => {
-    contentType = contentType || '';
+    contentType = contentType || "";
     var sliceSize = 1024;
     var byteCharacters = atob(base64Data);
     var bytesLength = byteCharacters.length;
