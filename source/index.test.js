@@ -1,6 +1,5 @@
 import blobToHash from 'blob-to-hash';
 import JSZip from 'jszip';
-import JSZipUtils from 'jszip-utils';
 
 import { expect } from 'chai';
 import axios from 'axios';
@@ -13,41 +12,7 @@ import gasketPng from '!!url-loader!./test-assets/images/gasket.png';
 import gasketWebp from '!!url-loader!./test-assets/images/gasket.webp';
 import duskJpg from '!!url-loader!./test-assets/images/dusk-sm.jpg';
 
-/**
-*  Taken from
-*  https://stackoverflow.com/a/20151856
-*/
-function base64toBlob(base64Data, contentType) {
-    contentType = contentType || '';
-    var sliceSize = 1024;
-    var byteCharacters = atob(base64Data);
-    var bytesLength = byteCharacters.length;
-    var slicesCount = Math.ceil(bytesLength / sliceSize);
-    var byteArrays = new Array(slicesCount);
-
-    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-        var begin = sliceIndex * sliceSize;
-        var end = Math.min(begin + sliceSize, bytesLength);
-
-        var bytes = new Array(end - begin);
-        for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
-            bytes[i] = byteCharacters[offset].charCodeAt(0);
-        }
-        byteArrays[sliceIndex] = new Uint8Array(bytes);
-    }
-    return new Blob(byteArrays, { type: contentType });
-}
-
-/**
-*  Based on the choosen answer at
-*  stackoverflow.com/questions/57929718/loading-binary-file-with-webpack-and-converting-to-blob  
-*/
-const convertToBlob = (rawDataString) => {
-  const [match, contentType, base64] = rawDataString.match(/^data:(.+);base64,(.*)$/);
-
-  return base64toBlob(base64, contentType);
-};
-
+import { convertToBlob } from './test-helpers';
 
 mocha.setup('bdd');
 
@@ -86,10 +51,6 @@ describe('Index', () => {
     mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').reply(200, convertToBlob(gasketPng));
     mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').reply(200, convertToBlob(duskJpg));
 
-    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').passThrough();
-    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').passThrough();
-    // mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').passThrough();
-
     it('list of known urls', async () => {
       let contentResolver;
 
@@ -103,9 +64,6 @@ describe('Index', () => {
 
       saveUrls(knownUrls);
       const content = await callWaiter;
-
-      const hash = await blobToHash('sha256', content);
-      console.log("Archive Hash", hash);
 
       const zip = await JSZip.loadAsync(content);
       const sourcesTxt = await zip.file("sources.json").async("string");
@@ -131,8 +89,6 @@ describe('Index', () => {
     });
 
     it('list of known urls - twice', async function () {
-      this.timeout(5000);
-
       const sizes = new Array();
       let passesAchived;
 
@@ -157,8 +113,6 @@ describe('Index', () => {
     });
 
     it('list of known urls - differences', async function () {
-      this.timeout(5000);
-
       const sizes = new Array();
       let passesAchived;
 
