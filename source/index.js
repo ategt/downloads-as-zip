@@ -55,7 +55,7 @@ export const saveArchive = function (archive) {
 *     into a zip archive.
 *  @returns {void}
 */
-const download = function (urls, promiseCollection, responses) {
+function download (urls, promiseCollection, responses) {
   for ( let url of urls ) {
     promiseCollection.push(
       axios.get(url, {responseType: "blob"}).then(function (response) {
@@ -65,7 +65,7 @@ const download = function (urls, promiseCollection, responses) {
   }
 };
 
-export const saveUrls = function (urls) {
+export function saveUrls (urls) {
   const results = new Array();
   const proms = new Array();
 

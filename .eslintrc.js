@@ -3,17 +3,18 @@ module.exports = {
     'browser': true,
     'es2021': true,
   },
+  'extends': ['plugin:jsdoc/recommended'],
   'parserOptions': {
     'ecmaVersion': 'latest',
     'sourceType': 'module',
   },
-  "plugins": [   
-    "require-jsdoc",  
+  'plugins': [
+    'jsdoc',
   ],
-  "rules": {   
-    "require-jsdoc": 2,  
-    "valid-jsdoc": 2,
-    "semi": ["error", "always"],
-    "quotes": ["error", "double"],
+  'rules': {
+    'jsdoc/require-jsdoc': 1,
+    'valid-jsdoc': 2,
+    'semi': ['error', 'always'],
+    'quotes': ['error', 'double'],
   }
 };
