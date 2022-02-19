@@ -74,7 +74,7 @@ describe('Index', () => {
       //
       // Best to leave it off.
       //
-      mockSaveAs.restore();
+      // mockSaveAs.restore();
       mockAdapter.restore();
     });
 
