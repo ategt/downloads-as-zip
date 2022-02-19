@@ -9,9 +9,23 @@ import sinon from 'sinon';
 import { saveUrls, saveArchive } from './index';
 import FileSaver from 'file-saver';
 
-import gasketPng from '!!raw-loader!./test-assets/images/gasket.png';
-import gasketWebp from '!!raw-loader!./test-assets/images/gasket.webp';
-import duskJpg from '!!raw-loader!./test-assets/images/dusk-sm.jpg';
+import gasketPng from '!!url-loader!./test-assets/images/gasket.png';
+import gasketWebp from '!!url-loader!./test-assets/images/gasket.webp';
+import duskJpg from '!!url-loader!./test-assets/images/dusk-sm.jpg';
+
+const convertToBlob = (rawDataString) => {
+  const [match, contentType, base64] = rawDataString.match(/^data:(.+);base64,(.*)$/);
+
+  // Convert base64 to a Blob
+  // Source: https://stackoverflow.com/a/20151856/626911
+  const file = base64toBlob(base64, contentType);
+
+  // Construct a 'change' event with file Blob
+  const event = { type: 'change', target: { files: [file] } };
+
+  // Fire the event
+  $("#file-chooser").trigger(event);
+};
 
 mocha.setup('bdd');
 
