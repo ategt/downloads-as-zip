@@ -8,12 +8,12 @@ module.exports = {
     'sourceType': 'module',
   },
   "plugins": [   
-    "require-jsdoc"   
+    "require-jsdoc",  
   ],
   "rules": {   
     "require-jsdoc": 2,  
     "valid-jsdoc": 2,
     "semi": ["error", "always"],
-    "quotes": ["error", "double"]
+    "quotes": ["error", "double"],
   }
 };
