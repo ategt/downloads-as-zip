@@ -5,15 +5,18 @@ import { saveAs } from "file-saver";
 import { v4 as uuidv4 } from "uuid";
 import yeast from "yeast";
 
+/** 
+ *   @module internetArchiver
+ */
+
 /**
-*  Construct archive from responses data list.
-*
-*  @param {Object[]} responses - An array of axios
-          responses, with decorated data.
-*  @param {string} archive - Source zip archive that responses
-*          are created in.
-*  @returns {JSZip} - The created archive.
-*/
+ *  Construct archive from responses data list.
+ *
+ *  @param {object[]} responses - An array of axios responses, with decorated data.
+ *  @param {string} archive - Source zip archive that responses
+ *          are created in.
+ *  @returns {JSZip} - The created archive.
+ */
 const buildArchive = function (responses, archive) {
   const sources = responses.map(result => ({url:result.url, uuid:result.uuid}));
 
@@ -28,11 +31,12 @@ const buildArchive = function (responses, archive) {
 };
 
 /**
-*  Generate a downloadable from the archive object, then
-*  save with saveAs function from FileSaver.js.
-*  @param {JSZip} archive - The Archive to save.
-*  @returns {void}
-*/
+ *  Generate a downloadable from the archive object, then
+ *  save with saveAs function from FileSaver.js.
+ *
+ *  @param {JSZip} archive - The Archive to save.
+ *  @returns {void}
+ */
 export const saveArchive = function (archive) {
   archive.generateAsync({type:"blob"}).then(function(content) {
     console.log("Begining download.");
@@ -41,20 +45,20 @@ export const saveArchive = function (archive) {
 };
 
 /**
-*  This function takes a list of URL's and fills
-*    the argumented list of responses.
-*
-*  We want this function to return a list of promises,
-*    that will resolve to a list of responses.
-*
-*  @param {string[]} urls - List of URLs to download.
-*  @param {Promise[]} promiseCollection - Outstanding promises
-*     to be monitored for completion.
-*  @param {Object[]} responses - An output argument, this is the
-*     list of response/url/uuid objects that will be converted 
-*     into a zip archive.
-*  @returns {void}
-*/
+ *  This function takes a list of URL's and fills
+ *    the argumented list of responses.
+ *
+ *  We want this function to return a list of promises,
+ *    that will resolve to a list of responses.
+ *
+ *  @param {string[]} urls - List of URLs to download.
+ *  @param {Promise[]} promiseCollection - Outstanding promises
+ *     to be monitored for completion.
+ *  @param {object[]} responses - An output argument, this is the
+ *     list of response/url/uuid objects that will be converted 
+ *     into a zip archive.
+ *  @returns {void}
+ */
 function download (urls, promiseCollection, responses) {
   for ( let url of urls ) {
     promiseCollection.push(
@@ -65,6 +69,12 @@ function download (urls, promiseCollection, responses) {
   }
 };
 
+/**
+ * Saves a list of URL strings into a zip archive and then passes that archive to the browser for downloading.
+ *
+ * @param {string[]} urls - List of URL's to be saved into zip archive.
+ * @returns {void}
+ */
 export function saveUrls (urls) {
   const results = new Array();
   const proms = new Array();
