@@ -1,13 +1,19 @@
 /**
-*  Converts a Base64 encoded string into a Binary Large Object.
-*
-*  Taken from
-*  https://stackoverflow.com/a/20151856
-*
-*  @param {string} base64Data - Source data for blob conversion
-*  @param {string} contentType - MIME type to use
-*  @returns {Blob} - Created from arguments
-*/
+ *  Helper Utilites for loading test fixture data.
+ *
+ *  @module
+ */
+
+/**
+ *  Converts a Base64 encoded string into a Binary Large Object.
+ *
+ *  Taken from
+ *  https://stackoverflow.com/a/20151856
+ *
+ *  @param {string} base64Data - Source data for blob conversion
+ *  @param {string} contentType - MIME type to use
+ *  @returns {Blob} - Created from arguments
+ */
 export const base64toBlob = (base64Data, contentType) => {
     contentType = contentType || "";
     var sliceSize = 1024;
@@ -30,17 +36,17 @@ export const base64toBlob = (base64Data, contentType) => {
 };
 
 /**
-*  Function to convert a base64 string to a blob.
-*
-*  Intended to be used in conjunction with 'url-loader' for loading simulated network
-*  data in tests.
-*
-*  Based on the choosen answer at
-*  stackoverflow.com/questions/57929718/loading-binary-file-with-webpack-and-converting-to-blob  
-*
-*  @param {string} rawDataString - The result of url-loader goes here
-*  @returns {Blob} - File contents as a blob.
-*/
+ *  Function to convert a base64 string to a blob.
+ *
+ *  Intended to be used in conjunction with 'url-loader' for loading simulated network
+ *  data in tests.
+ *
+ *  Based on the choosen answer at
+ *  stackoverflow.com/questions/57929718/loading-binary-file-with-webpack-and-converting-to-blob  
+ *
+ *  @param {string} rawDataString - The result of url-loader goes here
+ *  @returns {Blob} - File contents as a blob.
+ */
 export const convertToBlob = rawDataString => {
   const [match, contentType, base64] = rawDataString.match(/^data:(.+);base64,(.*)$/);
 
