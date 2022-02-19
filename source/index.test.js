@@ -1,3 +1,7 @@
+import blobToHash from 'blob-to-hash';
+import JSZip from 'jszip';
+import JSZipUtils from 'jszip-utils';
+
 import { expect } from 'chai';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -51,7 +55,7 @@ describe('Index', () => {
     mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').passThrough();
 
     it('list of known urls', async () => {
-      mockSaveAs.restore();
+      //mockSaveAs.restore();
       let contentResolver;
 
       const callWaiter = new Promise((resolve) => {
@@ -64,7 +68,31 @@ describe('Index', () => {
 
       saveUrls(knownUrls);
       const content = await callWaiter;
-      expect(content.size, content.size).equal(2739689);
+
+      const hash = await blobToHash('sha256', content);
+      console.log("Archive Hash", hash);
+
+      const zip = await JSZip.loadAsync(content);
+      const sourcesTxt = await zip.file("sources.json").async("string");
+      const sources = JSON.parse(sourcesTxt);
+
+      const sourceUrls = new Set(knownUrls);
+
+      const knownFileHases = new Set();
+      
+      knownFileHases.add("fbab980b5a4fa27fb63365aee3f1ab520b20415e57415b14f8974e1d16267b0e");
+      knownFileHases.add("d6aa2111a7b0f97fad96dbba17c7fe9554b132ba3d2be123104851f85e03ca44");
+      knownFileHases.add("e42cf4de4a9850cd411c2e99f35339c59760b290d8dc996f265b48bdc81abc00");
+
+      for ( const source of sources ) {
+        expect(sourceUrls.has(source.url), "All of the known URLs should appear in the sources list.").equal(true);
+        const fileName = source.uuid;
+        const file = await zip.file(fileName).async("blob");
+        const fileHash = await blobToHash('sha256', file);
+        expect(knownFileHases.has(fileHash), "The file name changes, but the hash should be the same.").equal(true);
+      }
+
+      expect(content.size, `Created Archive is an unexpected size: ${content.size}`).equal( 330191 );
     });
 
     it('list of known urls - twice', async function () {
