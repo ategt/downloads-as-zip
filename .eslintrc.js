@@ -3,13 +3,15 @@ module.exports = {
     'browser': true,
     'es2021': true,
   },
-  'extends': [
-    'google',
-  ],
   'parserOptions': {
     'ecmaVersion': 'latest',
     'sourceType': 'module',
   },
-  'rules': {
-  },
+  "plugins": [   
+    "require-jsdoc"   
+  ],
+  "rules": {   
+    "require-jsdoc": 2,  
+    "valid-jsdoc": 2   
+  }  
 };
