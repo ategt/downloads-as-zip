@@ -14,24 +14,6 @@ import gasketWebp from '!!url-loader!./test-assets/images/gasket.webp';
 import duskJpg from '!!url-loader!./test-assets/images/dusk-sm.jpg';
 
 /**
-*  Based on the choosen answer at
-*  stackoverflow.com/questions/57929718/loading-binary-file-with-webpack-and-converting-to-blob  
-*/
-const convertToBlob = (rawDataString) => {
-  const [match, contentType, base64] = rawDataString.match(/^data:(.+);base64,(.*)$/);
-
-  // Convert base64 to a Blob
-  // Source: https://stackoverflow.com/a/20151856/626911
-  const file = base64toBlob(base64, contentType);
-
-  // Construct a 'change' event with file Blob
-  const event = { type: 'change', target: { files: [file] } };
-
-  // Fire the event
-  $("#file-chooser").trigger(event);
-};
-
-/**
 *  Taken from
 *  https://stackoverflow.com/a/20151856
 */
@@ -55,6 +37,16 @@ function base64toBlob(base64Data, contentType) {
     }
     return new Blob(byteArrays, { type: contentType });
 }
+
+/**
+*  Based on the choosen answer at
+*  stackoverflow.com/questions/57929718/loading-binary-file-with-webpack-and-converting-to-blob  
+*/
+const convertToBlob = (rawDataString) => {
+  const [match, contentType, base64] = rawDataString.match(/^data:(.+);base64,(.*)$/);
+
+  return base64toBlob(base64, contentType);
+};
 
 
 mocha.setup('bdd');
@@ -82,7 +74,7 @@ describe('Index', () => {
       //
       // Best to leave it off.
       //
-      // mockSaveAs.restore();
+      mockSaveAs.restore();
       mockAdapter.restore();
     });
 
@@ -90,16 +82,15 @@ describe('Index', () => {
                        'http://127.0.0.1:5000/gasket.png',
                        'http://127.0.0.1:5000/dusk-sm.jpg'];
 
-    mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').reply(200, gasketWebp);
-    mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').reply(200, gasketPng);
-    mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').reply(200, duskJpg);
+    mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').reply(200, convertToBlob(gasketWebp));
+    mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').reply(200, convertToBlob(gasketPng));
+    mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').reply(200, convertToBlob(duskJpg));
 
     // mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').passThrough();
     // mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').passThrough();
     // mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').passThrough();
 
     it('list of known urls', async () => {
-      //mockSaveAs.restore();
       let contentResolver;
 
       const callWaiter = new Promise((resolve) => {
