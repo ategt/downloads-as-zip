@@ -21,11 +21,11 @@ describe('Index', () => {
 
     const mockAdapter = new MockAdapter(axios);
 
-    before(function () {});
-
-    beforeEach(function () {
+    before(function () {
       mockSaveAs = sinon.stub(FileSaver, "saveAs");
     });
+
+    beforeEach(function () {});
 
     afterEach(function () {
       mockSaveAs.reset();
@@ -46,13 +46,13 @@ describe('Index', () => {
                        'http://127.0.0.1:5000/gasket.png',
                        'http://127.0.0.1:5000/dusk-sm.jpg'];
 
-    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').reply(200, gasketWebp);
-    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').reply(200, gasketPng);
-    // mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').reply(200, duskJpg);
+    mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').reply(200, gasketWebp);
+    mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').reply(200, gasketPng);
+    mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').reply(200, duskJpg);
 
-    mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').passThrough();
-    mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').passThrough();
-    mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').passThrough();
+    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').passThrough();
+    // mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').passThrough();
+    // mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').passThrough();
 
     it('list of known urls', async () => {
       //mockSaveAs.restore();
