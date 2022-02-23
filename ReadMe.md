@@ -14,7 +14,7 @@ window.saveUrls(['http://www.example.com/file-a',
 				 'http://www.example.com/file-c']);
 ````
 
-The browser will enact a file download, which will be a single archive containing the contents of the files found at the URLs input as arguments, plus a 'sources.json' file.
+The browser will download a single archive containing the contents of the URL list, plus a 'sources.json' file.
 
 ### Using in Code
 
