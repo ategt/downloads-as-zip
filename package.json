@@ -2,9 +2,14 @@
   "name": "borntocode",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "source/index.js",
+  "files": [
+    "dist/global.min.js",
+    "dist/global.js",
+    "source/index.js"
+  ],
   "scripts": {
-    "build": "webpack --mode development --config build/webpack.config.dev.js",
+    "build:main": "webpack --config build/webpack.config.js && uglifyjs ./dist/global.js --compress --mangle --output ./dist/global.min.js",
     "minify": "uglifyjs ./dist/demo.js --compress --mangle --output ./dist/demo.min.js --source-map filename='./dist/demo.min.js.map'",
     "test": "webpack --config build/webpack.config.test.js",
     "test:watch": "webpack --watch --config build/webpack.config.test.js",
