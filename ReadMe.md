@@ -61,4 +61,4 @@ I was using this to help learn new languages, so file names are UUIDs, and the s
 npm pack
 ```
 
-Above command outputs `url-archiver-1.0.0.tgz` which can then be used by relative path in other projects.
+Above command outputs an archive with extension tgz, which can then be used by relative path in other projects.
