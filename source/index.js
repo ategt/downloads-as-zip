@@ -64,18 +64,22 @@ export function saveArchive (archive) {
  *  @returns {void}
  */
 function download (urls) {
-  const responses = new Array();
-  const promiseCollection = new Array();
+  return new Promise(function (resolve, reject) {
+    const responses = new Array();
+    const promiseCollection = new Array();
 
-  for ( let url of urls ) {
-    promiseCollection.push(
-      axios.get(url, {responseType: "blob"}).then(function (response) {
-        responses.push({url, response, uuid: uuidv4()});
-      }).catch(console.error)
-    );
-  }
+    for ( let url of urls ) {
+      promiseCollection.push(
+        axios.get(url, {responseType: "blob"}).then(function (response) {
+          responses.push({url, response, uuid: uuidv4()});
+        }).catch(console.error)
+      );
+    }
 
-  return {promiseCollection, responses};
+    axios.all(promiseCollection).then(function(not_sure){
+      resolve(responses);
+    });
+  });
 };
 
 /**
@@ -86,11 +90,9 @@ function download (urls) {
  * @returns {void}
  */
 export function saveUrls (urls) {
-  const {promiseCollection, responses} = download(urls);
-
-  const zip = new JSZip();
-
-  axios.all(promiseCollection).then(function(not_sure){
+  download(urls)
+  .then(function (responses) {
+    const zip = new JSZip();
     console.log("Data download finished, building archive.");
     buildArchive(responses, zip);
 
