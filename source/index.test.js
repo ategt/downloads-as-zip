@@ -43,13 +43,13 @@ describe('Index', () => {
       mockAdapter.restore();
     });
 
-    const knownUrls = ['http://127.0.0.1:5000/gasket.webp',
-                       'http://127.0.0.1:5000/gasket.png',
-                       'http://127.0.0.1:5000/dusk-sm.jpg'];
+    const knownUrls = ['http://127.0.0.1/gasket.webp',
+                       'http://127.0.0.1/gasket.png',
+                       'http://127.0.0.1/dusk-sm.jpg'];
 
-    mockAdapter.onGet('http://127.0.0.1:5000/gasket.webp').reply(200, convertToBlob(gasketWebp));
-    mockAdapter.onGet('http://127.0.0.1:5000/gasket.png').reply(200, convertToBlob(gasketPng));
-    mockAdapter.onGet('http://127.0.0.1:5000/dusk-sm.jpg').reply(200, convertToBlob(duskJpg));
+    mockAdapter.onGet('http://127.0.0.1/gasket.webp').reply(200, convertToBlob(gasketWebp));
+    mockAdapter.onGet('http://127.0.0.1/gasket.png').reply(200, convertToBlob(gasketPng));
+    mockAdapter.onGet('http://127.0.0.1/dusk-sm.jpg').reply(200, convertToBlob(duskJpg));
 
     it('list of known urls', async () => {
       let contentResolver;
