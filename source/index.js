@@ -13,15 +13,42 @@ import yeast from "yeast";
  */
 
 /**
+ *  This function takes a list of URL's and converts
+ *    it into a list of decorated axios responses.
+ *    Promises are involved.
+ *
+ *  @param {string[]} urls - List of URLs to download.
+ *  @returns {Promise<object[]>} - Decorated responses from URL requests.
+ */
+function download (urls) {
+  return new Promise(function (resolve, reject) {
+    const responses = new Array();
+    const promiseCollection = new Array();
+
+    for ( let url of urls ) {
+      promiseCollection.push(
+        axios.get(url, {responseType: "blob"}).then(function (response) {
+          responses.push({url, response, uuid: uuidv4()});
+        }).catch(console.error)
+      );
+    }
+
+    axios.all(promiseCollection).then(function(not_sure){
+      resolve(responses);
+    });
+  });
+};
+
+/**
  *  Construct archive from responses data list.
  *
  *  @param {object[]} responses - An array of axios responses, with decorated
  *    data.
- *  @param {string} archive - Source zip archive that responses
- *          are created in.
  *  @returns {JSZip} - The created archive.
  */
-const buildArchive = function (responses, archive) {
+const buildArchive = function (responses) {
+  const archive = new JSZip();
+
   const sources = responses.map(result => ({url:result.url, uuid:result.uuid}));
 
   archive.file("source.txt", location.href);
@@ -49,40 +76,6 @@ export function saveArchive (archive) {
 };
 
 /**
- *  This function takes a list of URL's and fills
- *    the argumented list of responses.
- *
- *  We want this function to return a list of promises,
- *    that will resolve to a list of responses.
- *
- *  @param {string[]} urls - List of URLs to download.
- *  @param {Promise[]} promiseCollection - Outstanding promises
- *     to be monitored for completion.
- *  @param {object[]} responses - An output argument, this is the
- *     list of response/url/uuid objects that will be converted 
- *     into a zip archive.
- *  @returns {void}
- */
-function download (urls) {
-  return new Promise(function (resolve, reject) {
-    const responses = new Array();
-    const promiseCollection = new Array();
-
-    for ( let url of urls ) {
-      promiseCollection.push(
-        axios.get(url, {responseType: "blob"}).then(function (response) {
-          responses.push({url, response, uuid: uuidv4()});
-        }).catch(console.error)
-      );
-    }
-
-    axios.all(promiseCollection).then(function(not_sure){
-      resolve(responses);
-    });
-  });
-};
-
-/**
  * Saves a list of URL strings into a zip archive and then passes that archive 
  *   to the browser for downloading.
  *
@@ -92,11 +85,10 @@ function download (urls) {
 export function saveUrls (urls) {
   download(urls)
   .then(function (responses) {
-    const zip = new JSZip();
     console.log("Data download finished, building archive.");
-    buildArchive(responses, zip);
+    const archive = buildArchive(responses);
 
     console.log("Archive constructed.  Generating...");
-    saveArchive(zip);
+    saveArchive(archive);
   });
 };
