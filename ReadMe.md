@@ -54,3 +54,11 @@ Current testing uses Chai/Mocha.  Earlier versions used other testing frameworks
 ### Background
 
 I was using this to help learn new languages, so file names are UUIDs, and the source URLs are saved to a 'sources.json' file.  This file can be used to map the UUIDs to source URL, if needed.  Older versions tried to guess file names from URL, but many of the resulting names were incompatible with my filesystem, which resulted in unreachable content.  The UUID solution is more flexible.  I have a python script to extract an archive and convert UUIDs back into appropriate file names [here](http://gist.github.com/5464616).
+
+### Packaging
+
+```sh
+npm pack
+```
+
+Above command outputs `url-archiver-1.0.0.tgz` which can then be used by relative path in other projects.
