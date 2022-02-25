@@ -85,7 +85,7 @@ describe('Index', () => {
         expect(knownFileHases.has(fileHash), "The file name changes, but the hash should be the same.").equal(true);
       }
 
-      expect(content.size, `Created Archive is an unexpected size: ${content.size}`).equal( 330191 );
+      expect(content.size, `Created Archive is an unexpected size: ${content.size}`).equal( 330176 );
     });
 
     it('list of known urls - twice', async function () {
