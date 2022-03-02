@@ -20,7 +20,7 @@ The browser will download a single archive containing the contents of the URL li
 
 First, to install the library:
 ```sh
-npm install https://raw.githubusercontent.com/ategt/downloads-as-zip/release/url-archiver-1.0.0.tgz --save
+npm install --save https://github.com/ategt/downloads-as-zip/releases/download/v1.0.0/url-archiver-1.0.0.tgz
 ```
 
 then to use the code in code
