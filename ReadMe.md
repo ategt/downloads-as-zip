@@ -20,7 +20,7 @@ The browser will download a single archive containing the contents of the URL li
 
 First, to install the library:
 ```sh
-npm install url-archiver --save
+npm install https://raw.githubusercontent.com/ategt/downloads-as-zip/release/url-archiver-1.0.0.tgz --save
 ```
 
 then to use the code in code
@@ -53,7 +53,7 @@ Current testing uses Chai/Mocha.  Earlier versions used other testing frameworks
 
 ### Background
 
-I was using this to help learn new languages, so file names are UUIDs, and the source URLs are saved to a 'sources.json' file.  This file can be used to map the UUIDs to source URL, if needed.  Older versions tried to guess file names from URL, but many of the resulting names were incompatible with my filesystem, which resulted in unreachable content.  The UUID solution is more flexible.  I have a python script to extract an archive and convert UUIDs back into appropriate file names [here](http://gist.github.com/5464616).
+I was using this to help learn new languages, so file names are UUIDs, and the source URLs are saved to a 'sources.json' file.  This file can be used to map the UUIDs to source URL, if needed.  Older versions tried to guess file names from URL, but many of the resulting names were incompatible with my filesystem, which resulted in unreachable content.  The UUID solution is more flexible.  I have a python script to extract an archive and convert UUIDs back into appropriate file names [here](https://gist.github.com/ategt/dd13370722e3e2a20987c3a1b597ffb8).
 
 ### Packaging
 
